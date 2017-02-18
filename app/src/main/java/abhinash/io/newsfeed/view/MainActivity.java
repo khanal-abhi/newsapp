@@ -1,6 +1,9 @@
 package abhinash.io.newsfeed.view;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -102,8 +105,14 @@ public class MainActivity extends AppCompatActivity implements FeedRecyclerViewA
     }
 
     @Override
-    public void onArticleSelected() {
-
+    public void onArticleSelected(@NonNull final Article article) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        String url = article.getWebUrl();
+        if (null == url) {
+            url = "https://google.com";
+        }
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
     }
 
     @Override

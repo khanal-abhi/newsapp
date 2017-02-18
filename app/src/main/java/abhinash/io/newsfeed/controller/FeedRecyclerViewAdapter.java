@@ -137,6 +137,13 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
             mSection = (TextView)itemView.findViewById(R.id.txt_section);
             mDate = (TextView)itemView.findViewById(R.id.txt_date);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mFeedRecyclerViewListener.onArticleSelected(mArticle);
+                }
+            });
+
         }
 
 
@@ -182,7 +189,7 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
         /**
          * Fired when the article is seclected.
          */
-        void onArticleSelected();
+        void onArticleSelected(@NonNull final Article article);
 
         /**
          * Fired when the next page is required.
