@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements
             mArticles.addAll(articles);
             int newSize = articles.size();
             if (null != mFeedRecyclerViewAdapter) {
-                mFeedRecyclerViewAdapter.notifyItemMoved(oldSize, newSize - 1);
+                mFeedRecyclerViewAdapter.notifyItemRangeInserted(oldSize, newSize - oldSize);
             }
         } else {
             if (page != 1)

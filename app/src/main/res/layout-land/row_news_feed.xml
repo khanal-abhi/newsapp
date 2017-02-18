@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/row_margin"
+    android:background="@color/colorWhite"
+    android:elevation="@dimen/row_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="@string/label_title"
+            style="@style/RowLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/row_margin"
+            android:layout_marginRight="@dimen/row_margin"/>
+
+        <TextView
+            android:text="@string/app_name"
+            android:id="@+id/txt_tite"
+            style="@style/RowTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="@string/label_section"
+            style="@style/RowLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/row_margin"
+            android:layout_marginRight="@dimen/row_margin"/>
+
+        <TextView
+            android:text="@string/app_name"
+            android:id="@+id/txt_section"
+            style="@style/RowSection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="@string/label_date_of_publication"
+            style="@style/RowLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/row_margin"
+            android:layout_marginRight="@dimen/row_margin"/>
+
+        <TextView
+            android:text="@string/app_name"
+            android:id="@+id/txt_date"
+            style="@style/RowDateOfPublication"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

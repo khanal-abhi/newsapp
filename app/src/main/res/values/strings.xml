@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">News Feed</string>
     <string name="title_main_activity">News Feed</string>
+    <string translatable="true" name="label_title">Tile:</string>
+    <string translatable="true" name="label_section">Section:</string>
+    <string translatable="true" name="label_date_of_publication">Date of Publication:</string>
 </resources>

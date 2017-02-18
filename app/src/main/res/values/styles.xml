@@ -41,6 +41,12 @@
         <item name="android:layout_margin">@dimen/item_margin</item>
     </style>
 
+    <style name="RowLabel">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/row_title_size</item>
+        <item name="android:layout_margin">@dimen/item_margin</item>
+    </style>
+
 
 
 </resources>
