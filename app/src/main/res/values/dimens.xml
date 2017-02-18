@@ -3,4 +3,13 @@
     <!-- HEADER -->
     <dimen name="header_height">68dp</dimen>
     <dimen name="header_text_size">24sp</dimen>
+
+    <!-- ROW -->
+    <dimen name="row_elevation">16dp</dimen>
+    <dimen name="row_margin">10dp</dimen>
+    <dimen name="item_margin">5dp</dimen>
+    <dimen name="row_title_size">20sp</dimen>
+    <dimen name="row_section_size">18sp</dimen>
+    <dimen name="row_date_size">14sp</dimen>
+    <dimen name="row_type_size">14sp</dimen>
 </resources>
