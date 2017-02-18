@@ -34,7 +34,7 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
 
     /**
      * Public constructor to take in the list of articles.
-     * @param articles
+     * @param articles -.
      */
     public FeedRecyclerViewAdapter(@NonNull final ArrayList<Article> articles,
                                    @NonNull final FeedRecyclerViewListener feedRecyclerViewListener) {
@@ -86,7 +86,7 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
 
     /**
      * The total number of items in the recyclerview.
-     * @return
+     * @return -.
      */
     @Override
     public int getItemCount() {
@@ -96,7 +96,7 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
     /**
      * The viewholder to hold the article.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+     class ViewHolder extends RecyclerView.ViewHolder {
 
         /**
          * Text view for the title.
@@ -124,7 +124,7 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
          * Public constructor to bind the views.
          * @param itemView
          */
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             mTitle = (TextView)itemView.findViewById(R.id.txt_tite);
@@ -145,7 +145,7 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
          * This binds the article to the viewholder.
          * @param article -.
          */
-        public void bind(@NonNull final Article article) {
+        void bind(@NonNull final Article article) {
             mArticle = article;
             if (null != article) {
                 if (null != mArticle.getWebTitle()) {
