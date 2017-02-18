@@ -45,8 +45,12 @@ public class AppUtil {
         JSONArray jsonArray = null;
 
         try {
-            if (null != jsonObject && jsonObject.has(AppConstants.RESULTS_KEY)) {
-                jsonArray = jsonObject.getJSONArray(AppConstants.RESULTS_KEY);
+            if (null != jsonObject)
+            if (jsonObject.has(AppConstants.RESPONSE_KEY)) {
+                JSONObject responseJson = jsonObject.getJSONObject(AppConstants.RESPONSE_KEY);
+                if (null != responseJson && responseJson.has(AppConstants.RESULTS_KEY)) {
+                    jsonArray = responseJson.getJSONArray(AppConstants.RESULTS_KEY);
+                }
             }
         } catch (JSONException exception) {
             exception.printStackTrace();

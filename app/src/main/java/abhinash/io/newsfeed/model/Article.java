@@ -1,11 +1,13 @@
 package abhinash.io.newsfeed.model;
 
+import java.io.Serializable;
+
 /**
  * Created by khanal on 2/17/17.
  * The article domain object.
  */
 
-public class Article {
+public class Article implements Serializable {
 
     /**
      * Article Id

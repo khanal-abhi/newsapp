@@ -68,7 +68,7 @@ public class FetchNewsFeed {
     private String downloadUrl(URL url) throws IOException {
         InputStream stream = null;
         HttpsURLConnection connection = null;
-        String result = null;
+        String result = "";
         try {
             connection = (HttpsURLConnection) url.openConnection();
             // Timeout for reading InputStream arbitrarily set to 3000ms.
@@ -90,7 +90,7 @@ public class FetchNewsFeed {
             stream = connection.getInputStream();
             if (stream != null) {
                 // Converts Stream to String with max length of 500.
-                result = readStream(stream, 500);
+                result = readStream(stream, 512);
             }
         } finally {
             // Close Stream and disconnect HTTPS connection.
@@ -107,26 +107,16 @@ public class FetchNewsFeed {
     /**
      * Converts the contents of an InputStream to a String.
      */
-    private String readStream(InputStream stream, int maxLength) throws IOException {
-        String result = null;
+    private String readStream(InputStream stream, int bufferSize) throws IOException {
+        String result = "";
         // Read InputStream using the UTF-8 charset.
         InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
         // Create temporary buffer to hold Stream data with specified max length.
-        char[] buffer = new char[maxLength];
+        char[] buffer = new char[bufferSize];
         // Populate temporary buffer with Stream data.
-        int numChars = 0;
         int readSize = 0;
-        while (numChars < maxLength && readSize != -1) {
-            numChars += readSize;
-            int pct = (100 * numChars) / maxLength;
-            readSize = reader.read(buffer, numChars, buffer.length - numChars);
-        }
-        if (numChars != -1) {
-            // The stream was not empty.
-            // Create String that is actual length of response body if actual length was less than
-            // max length.
-            numChars = Math.min(numChars, maxLength);
-            result = new String(buffer, 0, numChars);
+        while ((readSize = reader.read(buffer)) != -1) {
+            result += new String(buffer, 0, readSize);
         }
         return result;
     }

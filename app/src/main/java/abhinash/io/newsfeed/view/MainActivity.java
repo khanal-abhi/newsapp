@@ -10,13 +10,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.Objects;
 
 import abhinash.io.newsfeed.R;
 import abhinash.io.newsfeed.controller.FeedAsyncLoader;
 import abhinash.io.newsfeed.controller.FeedRecyclerViewAdapter;
 import abhinash.io.newsfeed.model.Article;
+import abhinash.io.newsfeed.model.SerializableArrayList;
+import abhinash.io.newsfeed.util.AppConstants;
 
 /**
  * Created by khanal on 2/17/17.
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Starting item for the recycler view for between sessions.
      */
-    private int startingItem;
+    private int startingItem = 0;
 
     /**
      * Current page for api call.
@@ -67,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_main);
-//        loadMockData();
 
     }
 
@@ -96,26 +98,10 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.getLayoutManager().scrollToPosition(startingItem);
     }
 
-    /**
-     * Load mock data.
-     */
-    private void loadMockData() {
-        mArticles.clear();
-        for (int i = 0; i < 10; i ++) {
-            Article article = new Article();
-            article.setWebTitle(String.format(Locale.US, "Title %d", i));
-            article.setSectionName(String.format(Locale.US, "Section %d", i));
-            article.setWebPublicationDate(String.format(Locale.US, "Date %d", i));
-            mArticles.add(article);
-        }
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
         saveFirstCompletelyVisibleItemPosition();
-        if (null != mFeedAsyncLoader)
-         mFeedAsyncLoader.unregisterListener(this);
     }
 
     /**
@@ -128,13 +114,54 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onArticleSelected(@NonNull final Article article) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        String url = article.getWebUrl();
-        if (null == url) {
-            url = "https://google.com";
+        if (null != article.getWebUrl()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(article.getWebUrl()));
+            startActivity(intent);
         }
-        intent.setData(Uri.parse(url));
-        startActivity(intent);
+    }
+
+    /**
+     * Save the page number for data as well as starting position for the recycler view.
+     * @param outState -.
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (null != outState) {
+            outState.putInt(AppConstants.API_QUERY_PAGE_KEY, page);
+            outState.putInt(AppConstants.RECYCLER_STARTING_POSITION, startingItem);
+            SerializableArrayList<Article> articleSerializableArrayList =
+                    new SerializableArrayList<>();
+            articleSerializableArrayList.setArrayList(mArticles);
+            outState.putSerializable(AppConstants.API_QUERY_KEY, articleSerializableArrayList);
+        }
+    }
+
+    /**
+     * Restore the page number for data as well as starting position for the recycler view.
+     * @param savedInstanceState -.
+     */
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (null != savedInstanceState) {
+            page = savedInstanceState.getInt(AppConstants.API_QUERY_PAGE_KEY, 1);
+            startingItem = savedInstanceState.getInt(AppConstants.RECYCLER_STARTING_POSITION);
+            SerializableArrayList serializableArrayList =
+                    (SerializableArrayList) savedInstanceState.
+                            getSerializable(AppConstants.API_QUERY_KEY);
+            if (null != serializableArrayList && null != serializableArrayList.getArrayList()) {
+                if (!serializableArrayList.getArrayList().isEmpty()) {
+                    Object object = serializableArrayList.getArrayList().get(0);
+                    if (object instanceof Article) {
+                        for (Object articleObject : serializableArrayList.getArrayList()) {
+                            mArticles.add((Article) articleObject);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -145,9 +172,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoadComplete(Loader<ArrayList<Article>> loader, ArrayList<Article> data) {
-        if (null != mArticles && mArticles.size() != 0) {
-            mArticles.addAll(data);
+    public void onLoadComplete(Loader<ArrayList<Article>> loader, ArrayList<Article> articles) {
+        if (null != articles && articles.size() != 0) {
+            int oldSize = mArticles.size();
+            mArticles.addAll(articles);
+            int newSize = articles.size();
+            if (null != mFeedRecyclerViewAdapter) {
+                mFeedRecyclerViewAdapter.notifyItemMoved(oldSize, newSize - 1);
+            }
         } else {
             if (page != 1)
             page -= 1;
