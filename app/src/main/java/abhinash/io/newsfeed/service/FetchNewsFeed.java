@@ -65,6 +65,10 @@ public class FetchNewsFeed {
         return articles;
     }
 
+    /**
+     * The Following two sections were from Android Developer Reference. I currently use Retrofit
+     * For any network calls. I have modified the stream reader bit to better suit my needs.
+     */
 
     /**
      * Given a URL, sets up a connection and gets the HTTP response body from the server.
