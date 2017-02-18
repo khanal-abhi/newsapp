@@ -48,6 +48,11 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
     private int page = 0;
 
     /**
+     * Page buffer to ask for scroll page.
+     */
+    private final int pageBuffer = 3;
+
+    /**
      * Public constructor to take in the list of articles.
      * @param articles
      */
@@ -83,6 +88,9 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        if (mArticles.size() - position == pageBuffer) {
+            mFeedRecyclerViewListener.onScrollToNextPage(page);
+        }
         Article article = mArticles.get(position);
         if (null != article) {
             holder.bind(mArticles.get(position));
@@ -97,7 +105,6 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
     public int getItemCount() {
         return mArticles.size();
     }
-
 
     /**
      * The viewholder to hold the article.
@@ -182,6 +189,14 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
     }
 
     /**
+     * Setter for page number.
+     * @param page
+     */
+    public void setPage(final int page) {
+        this.page = page;
+    }
+
+    /**
      * This is the listener interface for the Feed Recyclerview
      */
     public interface FeedRecyclerViewListener {
@@ -194,6 +209,6 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
         /**
          * Fired when the next page is required.
          */
-        void onScrollToNextPage();
+        void onScrollToNextPage(final int currentPage);
     }
 }

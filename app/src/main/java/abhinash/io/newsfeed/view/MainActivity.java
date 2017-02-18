@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements FeedRecyclerViewA
     }
 
     @Override
-    public void onScrollToNextPage() {
-
+    public void onScrollToNextPage(final int currentPage) {
+        Toast.makeText(this, "Scroll to next page from page " + currentPage , Toast.LENGTH_SHORT).show();
     }
 }
