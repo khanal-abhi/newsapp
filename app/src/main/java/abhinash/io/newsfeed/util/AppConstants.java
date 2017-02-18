@@ -7,7 +7,38 @@ package abhinash.io.newsfeed.util;
 
 public interface AppConstants {
 
+    /**
+     * App Config keys
+     */
     String API_KEY_KEY = "api-key";
-    String API_KEY = "";
+    String API_KEY = "b13dbcff-f820-4819-aac4-b33ee847f3f9";
+    String API_QUERY_KEY = "q";
+    String API_QUERY_KEYWORD = "music";
+    String API_QUERY_PAGE_KEY = "page";
+    String API_QUERY_PAGE_SIZE_KEY = "page-size";
     int pageSize = 10;
+
+    String urlString = "https://content.guardianapis.com/search";
+
+
+    /**
+     * Domain keys.
+
+
+    private String id;
+    private String webTitle;
+    private String sectionName;
+    private String webUrl;
+    private String webPublicationDate;
+
+     */
+
+
+
+    String RESULTS_KEY = "results";
+    String ARTICLE_ID = "id";
+    String ARTICLE_WEB_TITLE = "webTitle";
+    String ARTICLE_SECTION_NAME = "sectionName";
+    String ARTICLE_WEB_URL = "webUrl";
+    String ARTICLE_WEB_PUBLICATION_DATE = "webPublicationDate";
 }

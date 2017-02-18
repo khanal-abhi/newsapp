@@ -1,15 +1,18 @@
 package abhinash.io.newsfeed.service;
 
-import org.json.JSONObject;
+import android.net.Uri;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import abhinash.io.newsfeed.model.Article;
 import abhinash.io.newsfeed.util.AppConstants;
+import abhinash.io.newsfeed.util.AppUtil;
 
 /**
  * Created by khanal on 2/17/17.
@@ -33,7 +36,31 @@ public class FetchNewsFeed {
      */
     private FetchNewsFeed() {}
 
-    public Array
+    /**
+     * Get the list of articles for page.
+     * @param page -.
+     * @return -.
+     */
+    public ArrayList<Article> getArticlesFromPage(final int page) {
+        Uri uri = Uri.parse(AppConstants.urlString);
+        uri.buildUpon()
+                .appendQueryParameter(AppConstants.API_KEY_KEY, AppConstants.API_KEY)
+                .appendQueryParameter(AppConstants.API_QUERY_KEY, AppConstants.API_QUERY_KEYWORD)
+                .appendQueryParameter(AppConstants.API_QUERY_PAGE_SIZE_KEY, String.valueOf(pageSize))
+                .appendQueryParameter(AppConstants.API_QUERY_PAGE_KEY, String.valueOf(page))
+                .build();
+        ArrayList<Article> articles = null;
+        try {
+            String responseBody = downloadUrl(new URL(uri.toString()));
+            if (null != responseBody) {
+                articles = AppUtil.getArticlesFromResponseString(responseBody);
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+        return articles;
+    }
 
 
     /**
