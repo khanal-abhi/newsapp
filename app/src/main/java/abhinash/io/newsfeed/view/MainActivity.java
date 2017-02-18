@@ -1,5 +1,6 @@
 package abhinash.io.newsfeed.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,10 +10,11 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import abhinash.io.newsfeed.R;
 import abhinash.io.newsfeed.controller.FeedAsyncLoader;
@@ -28,7 +30,9 @@ import abhinash.io.newsfeed.util.AppConstants;
 
 public class MainActivity extends AppCompatActivity implements
         FeedRecyclerViewAdapter.FeedRecyclerViewListener,
-        Loader.OnLoadCompleteListener<ArrayList<Article>> {
+        Loader.OnLoadCompleteListener<ArrayList<Article>>,
+        SearchView.OnQueryTextListener
+{
 
     /**
      * Recyclerview adapter.
@@ -44,6 +48,16 @@ public class MainActivity extends AppCompatActivity implements
      * The recycler view to display the feed.
      */
     private RecyclerView mRecyclerView;
+
+    /**
+     * Seacrh view
+     */
+    private SearchView mSearchView;
+
+    /**
+     * Last used query string do not make the same call again.
+     */
+    private String queryString;
 
     /**
      * Starting item for the recycler view for between sessions.
@@ -70,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_main);
+        mSearchView = (SearchView) findViewById(R.id.searchbar_main);
 
     }
 
@@ -83,11 +98,9 @@ public class MainActivity extends AppCompatActivity implements
      * Set up the feed with the items and the saved position.
      */
     private void setUpFeed() {
+        mSearchView.setOnQueryTextListener(this);
         if (null == mFeedAsyncLoader) {
             mFeedAsyncLoader = new FeedAsyncLoader(this, page, this);
-        }
-        if (mArticles.isEmpty()) {
-            mFeedAsyncLoader.startLoading();
         }
         if (null == mFeedRecyclerViewAdapter) {
             mFeedRecyclerViewAdapter = new FeedRecyclerViewAdapter(mArticles, this);
@@ -96,6 +109,9 @@ public class MainActivity extends AppCompatActivity implements
                 LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mFeedRecyclerViewAdapter);
         mRecyclerView.getLayoutManager().scrollToPosition(startingItem);
+        if (mArticles.isEmpty()) {
+            mSearchView.setQuery(AppConstants.API_QUERY_KEYWORD, true);
+        }
     }
 
     @Override
@@ -184,5 +200,51 @@ public class MainActivity extends AppCompatActivity implements
             if (page != 1)
             page -= 1;
         }
+    }
+
+    /**
+     * Make the query
+     * @param queryString -.
+     */
+    private void makeQuery(@NonNull final String queryString) {
+        if (!queryString.equals(this.queryString)) {
+            this.queryString = queryString;
+            mArticles.clear();
+            mFeedRecyclerViewAdapter.notifyDataSetChanged();
+            mFeedAsyncLoader.setNewQueryString(queryString);
+        }
+    }
+
+    /**
+     * Submit new query.
+     * @param query -.
+     * @return -.
+     */
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        boolean handled = false;
+        if (null != query && query.length() >= 2) {
+            makeQuery(query);
+            InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
+            handled = true;
+        } else {
+            Toast.makeText(this, getString(R.string.query_error_message), Toast.LENGTH_SHORT)
+                    .show();
+        }
+        return handled;
+    }
+
+    /**
+     * Query text changed. If the text is 2 characters or more, start the load process.
+     * @param query -.
+     * @return -.
+     */
+    @Override
+    public boolean onQueryTextChange(String query) {
+        if (null != query && query.length() >= 2) {
+            makeQuery(query);
+        }
+        return false;
     }
 }

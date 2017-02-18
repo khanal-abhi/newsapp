@@ -4,4 +4,5 @@
     <string translatable="true" name="label_title">Tile:</string>
     <string translatable="true" name="label_section">Section:</string>
     <string translatable="true" name="label_date_of_publication">Date of Publication:</string>
+    <string translatable="true" name="query_error_message">Please type in at least 2 character to search.</string>
 </resources>

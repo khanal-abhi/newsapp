@@ -1,6 +1,7 @@
 package abhinash.io.newsfeed.service;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +35,11 @@ public class FetchNewsFeed {
     private FetchNewsFeed() {}
 
     /**
+     * Query string.
+     */
+    private String queryString = AppConstants.API_QUERY_KEYWORD;
+
+    /**
      * Get the list of articles for page.
      * @param page -.
      * @return -.
@@ -42,7 +48,7 @@ public class FetchNewsFeed {
         Uri uri = Uri.parse(AppConstants.URL_STRING);
         uri = uri.buildUpon()
                 .appendQueryParameter(AppConstants.API_KEY_KEY, AppConstants.API_KEY)
-                .appendQueryParameter(AppConstants.API_QUERY_KEY, AppConstants.API_QUERY_KEYWORD)
+                .appendQueryParameter(AppConstants.API_QUERY_KEY, queryString)
                 .appendQueryParameter(AppConstants.API_QUERY_PAGE_SIZE_KEY, String.valueOf(pageSize))
                 .appendQueryParameter(AppConstants.API_QUERY_PAGE_KEY, String.valueOf(page))
                 .build();
@@ -119,6 +125,14 @@ public class FetchNewsFeed {
             result += new String(buffer, 0, readSize);
         }
         return result;
+    }
+
+    /**
+     * The query string incase needs updating.
+     * @param queryString -.
+     */
+    public void setQueryString(@NonNull final String queryString) {
+        this.queryString = queryString;
     }
 
     /**

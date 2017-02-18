@@ -142,6 +142,16 @@ public class FeedAsyncLoader extends AsyncTaskLoader<ArrayList<Article>> {
     }
 
     /**
+     * Set new query string.
+     * @param queryString
+     */
+    public void setNewQueryString(@NonNull final String queryString) {
+        reset();
+        mFetchNewsFeed.setQueryString(queryString);
+        startLoading();
+    }
+
+    /**
      * Set a new page number.
      * @param page -.
      */

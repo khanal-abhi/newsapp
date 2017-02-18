@@ -30,7 +30,7 @@
     </style>
 
     <style name="RowDateOfPublication">
-        <item name="android:textColor">@color/colorFadedText</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textSize">@dimen/row_date_size</item>
         <item name="android:layout_margin">@dimen/item_margin</item>
     </style>
@@ -46,7 +46,5 @@
         <item name="android:textSize">@dimen/row_title_size</item>
         <item name="android:layout_margin">@dimen/item_margin</item>
     </style>
-
-
 
 </resources>
