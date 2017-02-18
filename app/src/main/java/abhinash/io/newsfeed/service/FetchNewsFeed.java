@@ -21,9 +21,10 @@ import abhinash.io.newsfeed.util.AppUtil;
  */
 
 public class FetchNewsFeed {
-
-
-
+    /**
+     * Singleton instance
+     */
+    private static FetchNewsFeed instance;
     /**
      * Page size for feed loads.
      */
@@ -143,7 +144,10 @@ public class FetchNewsFeed {
      * Holds a singleton instance for the service.
      */
     public static FetchNewsFeed sharedInstance() {
-        return new FetchNewsFeed();
+        if (null == instance) {
+            instance = new FetchNewsFeed();
+        }
+        return instance;
     }
 
 }
