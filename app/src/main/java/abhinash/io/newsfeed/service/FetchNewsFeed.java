@@ -21,15 +21,12 @@ import abhinash.io.newsfeed.util.AppUtil;
 
 public class FetchNewsFeed {
 
-    /**
-     * Holds a singleton instance for the service.
-     */
-    public static FetchNewsFeed sharedInstance = new FetchNewsFeed();
+
 
     /**
      * Page size for feed loads.
      */
-    private static final int pageSize = AppConstants.pageSize;
+    private static final int pageSize = AppConstants.PAGE_SIZE;
 
     /**
      * Private constructor for singleton.
@@ -42,8 +39,8 @@ public class FetchNewsFeed {
      * @return -.
      */
     public ArrayList<Article> getArticlesFromPage(final int page) {
-        Uri uri = Uri.parse(AppConstants.urlString);
-        uri.buildUpon()
+        Uri uri = Uri.parse(AppConstants.URL_STRING);
+        uri = uri.buildUpon()
                 .appendQueryParameter(AppConstants.API_KEY_KEY, AppConstants.API_KEY)
                 .appendQueryParameter(AppConstants.API_QUERY_KEY, AppConstants.API_QUERY_KEYWORD)
                 .appendQueryParameter(AppConstants.API_QUERY_PAGE_SIZE_KEY, String.valueOf(pageSize))
@@ -132,6 +129,13 @@ public class FetchNewsFeed {
             result = new String(buffer, 0, numChars);
         }
         return result;
+    }
+
+    /**
+     * Holds a singleton instance for the service.
+     */
+    public static FetchNewsFeed sharedInstance() {
+        return new FetchNewsFeed();
     }
 
 }

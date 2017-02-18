@@ -5,15 +5,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 import abhinash.io.newsfeed.R;
+import abhinash.io.newsfeed.controller.FeedAsyncLoader;
 import abhinash.io.newsfeed.controller.FeedRecyclerViewAdapter;
 import abhinash.io.newsfeed.model.Article;
 
@@ -22,7 +23,9 @@ import abhinash.io.newsfeed.model.Article;
  * This is the main Activity.
  */
 
-public class MainActivity extends AppCompatActivity implements FeedRecyclerViewAdapter.FeedRecyclerViewListener{
+public class MainActivity extends AppCompatActivity implements
+        FeedRecyclerViewAdapter.FeedRecyclerViewListener,
+        Loader.OnLoadCompleteListener<ArrayList<Article>> {
 
     /**
      * Recyclerview adapter.
@@ -45,8 +48,18 @@ public class MainActivity extends AppCompatActivity implements FeedRecyclerViewA
     private int startingItem;
 
     /**
+     * Current page for api call.
+     */
+    private int page = 1;
+
+    /**
+     * Async loader for feed.
+     */
+    private FeedAsyncLoader mFeedAsyncLoader;
+
+    /**
      * Activity is created. Do view setup here.
-     * @param savedInstanceState
+     * @param savedInstanceState -.
      */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements FeedRecyclerViewA
         setContentView(R.layout.activity_main);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_main);
-        loadMockData();
+//        loadMockData();
 
     }
 
@@ -68,13 +81,19 @@ public class MainActivity extends AppCompatActivity implements FeedRecyclerViewA
      * Set up the feed with the items and the saved position.
      */
     private void setUpFeed() {
-            if (null == mFeedRecyclerViewAdapter) {
-                mFeedRecyclerViewAdapter = new FeedRecyclerViewAdapter(mArticles, this);
-            }
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(this,
-                    LinearLayoutManager.VERTICAL, false));
-            mRecyclerView.setAdapter(mFeedRecyclerViewAdapter);
-            mRecyclerView.getLayoutManager().scrollToPosition(startingItem);
+        if (null == mFeedAsyncLoader) {
+            mFeedAsyncLoader = new FeedAsyncLoader(this, page, this);
+        }
+        if (mArticles.isEmpty()) {
+            mFeedAsyncLoader.startLoading();
+        }
+        if (null == mFeedRecyclerViewAdapter) {
+            mFeedRecyclerViewAdapter = new FeedRecyclerViewAdapter(mArticles, this);
+        }
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setAdapter(mFeedRecyclerViewAdapter);
+        mRecyclerView.getLayoutManager().scrollToPosition(startingItem);
     }
 
     /**
@@ -95,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements FeedRecyclerViewA
     protected void onPause() {
         super.onPause();
         saveFirstCompletelyVisibleItemPosition();
+        if (null != mFeedAsyncLoader)
+         mFeedAsyncLoader.unregisterListener(this);
     }
 
     /**
@@ -117,7 +138,19 @@ public class MainActivity extends AppCompatActivity implements FeedRecyclerViewA
     }
 
     @Override
-    public void onScrollToNextPage(final int currentPage) {
-        Toast.makeText(this, "Scroll to next page from page " + currentPage , Toast.LENGTH_SHORT).show();
+    public void onScrollToNextPage() {
+        page += 1;
+        mFeedAsyncLoader.setPage(page);
+        mFeedAsyncLoader.startLoading();
+    }
+
+    @Override
+    public void onLoadComplete(Loader<ArrayList<Article>> loader, ArrayList<Article> data) {
+        if (null != mArticles && mArticles.size() != 0) {
+            mArticles.addAll(data);
+        } else {
+            if (page != 1)
+            page -= 1;
+        }
     }
 }

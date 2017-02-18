@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 import abhinash.io.newsfeed.R;
 import abhinash.io.newsfeed.model.Article;
-import abhinash.io.newsfeed.util.AppConstants;
 
 /**
  * Created by khanal on 2/18/17.
@@ -28,29 +27,10 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
     private ArrayList<Article> mArticles;
 
     /**
-     * The application context.
-     */
-    private Context mCotext;
-
-    /**
      * The listener for this adapter.
      */
     private FeedRecyclerViewListener mFeedRecyclerViewListener;
 
-    /**
-     * Page size.
-     */
-    private final int pageSize = AppConstants.pageSize;
-
-    /**
-     * Current page.
-     */
-    private int page = 0;
-
-    /**
-     * Page buffer to ask for scroll page.
-     */
-    private final int pageBuffer = 3;
 
     /**
      * Public constructor to take in the list of articles.
@@ -71,7 +51,10 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder = null;
-        mCotext = parent.getContext();
+        /*
+      The application context.
+     */
+        Context mCotext = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(mCotext);
         View row = inflater.inflate(R.layout.row_news_feed, parent, false);
 
@@ -88,8 +71,12 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        /*
+      Page buffer to ask for scroll page.
+     */
+        int pageBuffer = 3;
         if (mArticles.size() - position == pageBuffer) {
-            mFeedRecyclerViewListener.onScrollToNextPage(page);
+            mFeedRecyclerViewListener.onScrollToNextPage();
         }
         Article article = mArticles.get(position);
         if (null != article) {
@@ -189,14 +176,6 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
     }
 
     /**
-     * Setter for page number.
-     * @param page
-     */
-    public void setPage(final int page) {
-        this.page = page;
-    }
-
-    /**
      * This is the listener interface for the Feed Recyclerview
      */
     public interface FeedRecyclerViewListener {
@@ -209,6 +188,6 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedRecyclerVi
         /**
          * Fired when the next page is required.
          */
-        void onScrollToNextPage(final int currentPage);
+        void onScrollToNextPage();
     }
 }

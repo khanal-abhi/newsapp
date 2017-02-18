@@ -16,9 +16,11 @@ public interface AppConstants {
     String API_QUERY_KEYWORD = "music";
     String API_QUERY_PAGE_KEY = "page";
     String API_QUERY_PAGE_SIZE_KEY = "page-size";
-    int pageSize = 10;
+    int PAGE_SIZE = 10;
 
-    String urlString = "https://content.guardianapis.com/search";
+    String URL_STRING = "https://content.guardianapis.com/search";
+
+    int FEED_LOAD_KEY = 1;
 
 
     /**
@@ -32,9 +34,6 @@ public interface AppConstants {
     private String webPublicationDate;
 
      */
-
-
-
     String RESULTS_KEY = "results";
     String ARTICLE_ID = "id";
     String ARTICLE_WEB_TITLE = "webTitle";
