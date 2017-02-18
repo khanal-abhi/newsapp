@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Header style -->
+    <style name="HeaderStyle">
+        <item name="android:textColor">@color/colorLightText</item>
+        <item name="android:textSize">@dimen/header_text_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
 </resources>
